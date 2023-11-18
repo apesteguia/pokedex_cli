@@ -58,6 +58,12 @@ impl Pokemon {
 
             println!("│   └─ {}{}: {}\x1b[0m", color_code, stat_name, base_stat);
         }
+        println!("├─ \x1b[1;34mHeight:\x1b[0m {} m", self.height / 10.0);
+        println!("├─ \x1b[1;34mWeight:\x1b[0m {} kg", self.weight);
+        println!(
+            "├─ \x1b[1;34mBase experience:\x1b[0m {}",
+            self.base_experience
+        );
 
         println!("");
     }
@@ -72,6 +78,9 @@ pub struct Pokemon {
     types: Vec<Types>,
     abilities: Vec<Abilities>,
     stats: Vec<Stats>,
+    weight: f32,
+    height: f32,
+    order: u16,
 }
 
 #[allow(dead_code)]
