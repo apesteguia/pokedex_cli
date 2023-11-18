@@ -15,7 +15,7 @@ async fn main() {
     if args.len() > 1 {
         pk = Pokemon::new(&args[1]).await;
     } else {
-        println!("Enter the pokemon name or id: ");
+        print!("Enter the pokemon name or id: ");
         io::stdout().flush().unwrap();
         io::stdin().read_line(&mut name).unwrap();
         pk = Pokemon::new(&name).await;

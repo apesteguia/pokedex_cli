@@ -21,17 +21,44 @@ impl Pokemon {
     }
     pub fn show(&self) {
         println!("");
-        println!("POKEMON DATA");
-        println!("├─ Id: {}", self.id);
-        println!("├─ Name: {}", self.name);
-        println!("└─ Types:");
+        println!("\x1b[1;34mPOKEMON DATA\x1b[0m",);
+        println!("├─ \x1b[1;34mId:\x1b[0m {}", self.id);
+        println!("├─ \x1b[1;34mName:\x1b[0m {}", self.name);
+        println!("├─ \x1b[1;34mTypes:\x1b[0m");
         for i in &self.types {
-            println!("   └─ {}", i.pokemon_type.name);
+            println!("│   └─ {}", i.pokemon_type.name);
         }
-        println!("└─ Abilities:");
+        println!("├─ \x1b[1;34mAbilities:\x1b[0m");
         for i in &self.abilities {
-            println!("   └─ {}", i.ability.name);
+            if i.is_hidden {
+                println!(
+                    "│   └─ \x1b[1;34m\x1b[0m{} (\x1b[33mhidden\x1b[0m)",
+                    i.ability.name
+                );
+            } else {
+                println!("│   └─ \x1b[1;34m\x1b[0m{}", i.ability.name);
+            }
         }
+        println!(
+            "├─ \x1b[1;34mStats (total):\x1b[0m {}",
+            self.stats.iter().map(|s| s.base_stat).sum::<u16>()
+        );
+
+        for i in &self.stats {
+            let stat_name = &i.stat.name;
+            let base_stat = i.base_stat;
+
+            let color_code = match base_stat {
+                0..=50 => "\x1b[31m",      // Rojo oscuro
+                51..=75 => "\x1b[93m",     // Amarillo claro
+                76..=100 => "\x1b[32m",    // Verde claro \x1b[38;5;118m
+                101..=300 => "\x1b[1;92m", // Verde oscuro
+                _ => "\x1b[1;92m",         // Valor fuera de rango
+            };
+
+            println!("│   └─ {}{}: {}\x1b[0m", color_code, stat_name, base_stat);
+        }
+
         println!("");
     }
 }
@@ -44,6 +71,22 @@ pub struct Pokemon {
     base_experience: i32,
     types: Vec<Types>,
     abilities: Vec<Abilities>,
+    stats: Vec<Stats>,
+}
+
+#[allow(dead_code)]
+#[derive(Debug, Deserialize)]
+struct Stats {
+    stat: Stat,
+    base_stat: u16,
+    effort: u16,
+}
+
+#[allow(dead_code)]
+#[derive(Debug, Deserialize)]
+struct Stat {
+    name: String,
+    //url: String,
 }
 
 #[allow(dead_code)]
